@@ -4,17 +4,28 @@ import { ImageStreamHero } from "../ui/image-stream-hero";
 import { GradientText } from "../ui/GradientText";
 
 const workImages = [
-  { src: "/assets/trabajo/bolsaHarry.PNG",    alt: "Bolsa Harry" },
-  { src: "/assets/trabajo/gorra1.png",         alt: "Gorra 1" },
-  { src: "/assets/trabajo/gorra2.png",         alt: "Gorra 2" },
-  { src: "/assets/trabajo/harry1.png",         alt: "Harry 1" },
-  { src: "/assets/trabajo/harry2.png",         alt: "Harry 2" },
-  { src: "/assets/trabajo/mayiaplayera.png",   alt: "Mayia Playera" },
-  { src: "/assets/trabajo/stcikers.png",       alt: "Stickers" },
-  // Loop to fill the corridor
-  { src: "/assets/trabajo/bolsaHarry.PNG",    alt: "Bolsa Harry 2" },
-  { src: "/assets/trabajo/gorra1.png",         alt: "Gorra 1 v2" },
-  { src: "/assets/trabajo/harry1.png",         alt: "Harry 1 v2" },
+  { src: "/assets/trabajo/bolsaHarry.PNG",   alt: "Bolsa Harry" },
+  { src: "/assets/trabajo/gorra1.png",       alt: "Gorra 1" },
+  { src: "/assets/trabajo/gorra2.png",       alt: "Gorra 2" },
+  { src: "/assets/trabajo/harry1.png",       alt: "Harry 1" },
+  { src: "/assets/trabajo/harry2.png",       alt: "Harry 2" },
+  { src: "/assets/trabajo/mayiaplayera.png", alt: "Mayia Playera" },
+  { src: "/assets/trabajo/stcikers.png",     alt: "Stickers" },
+  { src: "/assets/trabajo/3.jpg",            alt: "Trabajo 3" },
+  { src: "/assets/trabajo/7.jpg",            alt: "Trabajo 7" },
+  { src: "/assets/trabajo/9.jpg",            alt: "Trabajo 9" },
+  { src: "/assets/trabajo/10.jpg",           alt: "Trabajo 10" },
+  { src: "/assets/trabajo/15.jpg",           alt: "Trabajo 15" },
+  { src: "/assets/trabajo/18.jpg",           alt: "Trabajo 18" },
+  { src: "/assets/trabajo/IMG_0174.PNG",     alt: "Trabajo 0174" },
+  { src: "/assets/trabajo/IMG_0175.PNG",     alt: "Trabajo 0175" },
+  { src: "/assets/trabajo/IMG_0176.PNG",     alt: "Trabajo 0176" },
+  { src: "/assets/trabajo/IMG_0177.PNG",     alt: "Trabajo 0177" },
+  { src: "/assets/trabajo/IMG_0178.PNG",     alt: "Trabajo 0178" },
+  { src: "/assets/trabajo/IMG_0179.PNG",     alt: "Trabajo 0179" },
+  { src: "/assets/trabajo/IMG_9908.PNG",     alt: "Trabajo 9908" },
+  { src: "/assets/trabajo/IMG_9909.PNG",     alt: "Trabajo 9909" },
+  { src: "/assets/trabajo/IMG_9910.PNG",     alt: "Trabajo 9910" },
 ];
 
 export function Portfolio() {
@@ -22,9 +33,10 @@ export function Portfolio() {
     <section id="portfolio" className="relative z-10">
       <ImageStreamHero
         images={workImages}
-        cards={5}
-        speed={38}
+        cards={Math.ceil(workImages.length / 2)}
+        speed={62}
         axis={58}
+        path={{ railBirth: -14, railExit: 62, fan: 2.4, turnExit: 34 }}
         className="w-full h-screen"
       >
         {/* Overlay: gradient top + bottom so the section edges blend with black */}

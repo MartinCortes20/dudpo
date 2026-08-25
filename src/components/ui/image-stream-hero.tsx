@@ -108,9 +108,10 @@ export function ImageStreamHero({
         }}
       >
         <div className="absolute inset-0" style={{ transformStyle: "preserve-3d" }}>
-          {[right, left].map((name) =>
+          {[right, left].map((name, rail) =>
             Array.from({ length: cards }, (_, i) => {
-              const img = images[i % Math.max(images.length, 1)];
+              // cada riel arranca en un offset distinto para no repetir la misma imagen
+              const img = images[(i + rail * cards) % Math.max(images.length, 1)];
               return (
                 <div
                   key={`${name}-${i}`}
