@@ -26,6 +26,8 @@ interface CircularGalleryProps {
 export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState(0);
+  // ponytail: uniform scale keeps the 3D ring intact on narrow screens
+  const [scale, setScale] = useState(1);
   const rotationRef = useRef(0);
   const isDragging = useRef(false);
   const lastX = useRef(0);
@@ -37,6 +39,14 @@ export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
   const ANGLE_STEP = 360 / ITEM_COUNT;
   // Radius scales with number of items
   const RADIUS = Math.max(340, ITEM_COUNT * 58);
+
+  /* ── Fit the ring to the viewport ───────────────────────────────── */
+  useEffect(() => {
+    const fit = () => setScale(Math.min(1, window.innerWidth / 560));
+    fit();
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, []);
 
   /* ── Inertia scroll ────────────────────────────────────────────── */
   const applyInertia = useCallback(() => {
@@ -131,9 +141,9 @@ export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing select-none"
-      style={{ perspective: "1200px" }}
+      className="relative w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing select-none touch-pan-y"
     >
+      <div style={{ perspective: "1200px", transform: `scale(${scale})` }}>
       <div
         className="relative"
         style={{
@@ -197,9 +207,10 @@ export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
           );
         })}
       </div>
+      </div>
 
       {/* Hint */}
-      <p className="absolute bottom-6 left-1/2 -translate-x-1/2 text-chrome-600 text-xs tracking-widest uppercase pointer-events-none">
+      <p className="absolute bottom-2 sm:bottom-6 left-1/2 -translate-x-1/2 w-full px-4 text-center text-chrome-600 text-[10px] sm:text-xs tracking-widest uppercase pointer-events-none">
         Arrastra o scroll para girar
       </p>
     </div>

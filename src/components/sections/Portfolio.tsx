@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { ImageStreamHero } from "../ui/image-stream-hero";
 import { GradientText } from "../ui/GradientText";
 
@@ -29,15 +30,30 @@ const workImages = [
 ];
 
 export function Portfolio() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   return (
     <section id="portfolio" className="relative z-10">
       <ImageStreamHero
         images={workImages}
-        cards={Math.ceil(workImages.length / 2)}
+        cards={isMobile ? 6 : Math.ceil(workImages.length / 2)}
         speed={62}
-        axis={58}
-        path={{ railBirth: -14, railExit: 62, fan: 2.4, turnExit: 34 }}
-        className="w-full h-screen"
+        axis={isMobile ? 52 : 58}
+        // cqw-based corridor: on a narrow container the cards need a bigger
+        // slice of the width (and less lateral spread) to read the same way
+        path={
+          isMobile
+            ? { railBirth: -8, railExit: 40, fan: 2.4, turnExit: 26, birthHeight: 4, exitHeight: 95 }
+            : { railBirth: -14, railExit: 62, fan: 2.4, turnExit: 34 }
+        }
+        className="w-full h-[85svh] md:h-screen"
       >
         {/* Overlay: gradient top + bottom so the section edges blend with black */}
         <div className="absolute inset-0 pointer-events-none">
@@ -48,15 +64,15 @@ export function Portfolio() {
         {/* Centered title */}
         <div className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
           {/* Radial glow behind text */}
-          <div className="absolute w-[500px] h-[200px] bg-electric-violet/20 blur-3xl rounded-full" />
+          <div className="absolute w-[280px] sm:w-[400px] md:w-[500px] h-[160px] md:h-[200px] bg-electric-violet/20 blur-3xl rounded-full" />
 
-          <p className="text-electric-violet font-semibold tracking-[0.3em] uppercase text-xs mb-4 relative">
+          <p className="text-electric-violet font-semibold tracking-[0.3em] uppercase text-[10px] sm:text-xs mb-3 sm:mb-4 relative">
             Creaciones
           </p>
-          <h2 className="font-outfit font-black text-5xl md:text-7xl text-center leading-none relative">
+          <h2 className="font-outfit font-black text-4xl sm:text-5xl md:text-7xl text-center leading-none relative px-4">
             MI <GradientText variant="chrome">TRABAJO</GradientText>
           </h2>
-          <p className="mt-4 text-chrome-400 text-sm tracking-widest relative">
+          <p className="mt-4 px-4 text-center text-chrome-400 text-xs sm:text-sm tracking-widest relative">
             Diseño · Fotografía · Video · Contenido
           </p>
         </div>

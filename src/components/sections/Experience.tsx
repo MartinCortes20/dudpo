@@ -9,17 +9,31 @@ import { CircularGallery, type GalleryItem } from "../ui/circular-gallery";
 
 const PLACEHOLDER = "/assets/socialMedia/hotel.png";
 
+// Portadas disponibles en /public/assets/socialMedia (el resto usa el placeholder)
+const COVERS: Record<string, string> = {
+  "edgenet": "/assets/socialMedia/PORTADA%20EDGENET.jpg",
+  "flai": "/assets/socialMedia/PORTADA%20FLAI.jpg",
+  "mayia": "/assets/socialMedia/PORTADA%20MAYIA.jpg",
+  "west-music-studio": "/assets/socialMedia/PORTADA%20WEST.jpg",
+  "hotel-lomas-inn": "/assets/socialMedia/PORTADA%20LOM.jpg",
+  "hr-graduaciones": "/assets/socialMedia/PORTADA%20HR.png",
+  "laboratorio-clinico": "/assets/socialMedia/PORTADA%20LCJ.jpg",
+};
+
 // Map experience data to GalleryItem shape
-const galleryItems: GalleryItem[] = experience.map((exp) => ({
-  id: exp.id,
-  company: exp.company,
-  role: exp.role,
-  // Short summary: first sentence or first 90 chars
-  summary: exp.description.split(".")[0] + ".",
-  description: exp.description,
-  photo: PLACEHOLDER,
-  photos: [PLACEHOLDER],
-}));
+const galleryItems: GalleryItem[] = experience.map((exp) => {
+  const photo = COVERS[exp.id] ?? PLACEHOLDER;
+  return {
+    id: exp.id,
+    company: exp.company,
+    role: exp.role,
+    // Short summary: first sentence or first 90 chars
+    summary: exp.description.split(".")[0] + ".",
+    description: exp.description,
+    photo,
+    photos: [photo],
+  };
+});
 
 export function Experience() {
   const [selected, setSelected] = useState<GalleryItem | null>(null);
@@ -38,17 +52,17 @@ export function Experience() {
             transition={{ duration: 0.4 }}
           >
             {/* Title */}
-            <div className="pt-24 pb-6 text-center">
-              <h2 className="text-4xl md:text-5xl font-outfit font-bold">
+            <div className="pt-16 sm:pt-24 pb-6 px-4 text-center">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-outfit font-bold">
                 SOCIAL <GradientText variant="chrome">MEDIA</GradientText>
               </h2>
-              <p className="text-chrome-400 mt-3 text-sm tracking-widest uppercase">
+              <p className="text-chrome-400 mt-3 text-xs sm:text-sm tracking-widest uppercase">
                 Experiencias &amp; Colaboraciones
               </p>
             </div>
 
             {/* Carousel */}
-            <div className="w-full h-[600px]">
+            <div className="w-full h-[440px] sm:h-[540px] md:h-[600px]">
               <CircularGallery items={galleryItems} onSelect={setSelected} />
             </div>
           </motion.div>
@@ -64,10 +78,10 @@ export function Experience() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="min-h-[700px] relative"
+            className="min-h-[560px] sm:min-h-[700px] relative"
           >
             {/* Hero image */}
-            <div className="relative w-full h-72 md:h-96 overflow-hidden">
+            <div className="relative w-full h-56 sm:h-72 md:h-96 overflow-hidden">
               <Image
                 src={selected.photo}
                 alt={selected.company}
@@ -80,13 +94,13 @@ export function Experience() {
               {/* Back button */}
               <button
                 onClick={() => setSelected(null)}
-                className="absolute top-6 left-6 z-20 flex items-center gap-2 px-5 py-2.5 rounded-full border border-electric-violet/50 bg-black/70 backdrop-blur text-white text-sm font-semibold hover:bg-electric-violet/30 hover:border-electric-violet transition-all duration-200"
+                className="absolute top-4 left-4 sm:top-6 sm:left-6 z-20 flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm rounded-full border border-electric-violet/50 bg-black/70 backdrop-blur text-white font-semibold hover:bg-electric-violet/30 hover:border-electric-violet transition-all duration-200"
               >
                 ← Regresar
               </button>
 
               {/* Floating badge */}
-              <div className="absolute bottom-8 left-8 z-20">
+              <div className="absolute bottom-5 left-4 sm:bottom-8 sm:left-8 z-20">
                 <span className="inline-block px-3 py-1 rounded-full bg-electric-violet/80 text-white text-xs font-semibold tracking-widest uppercase shadow-[0_0_20px_rgba(139,92,246,0.6)]">
                   {selected.role}
                 </span>
@@ -94,7 +108,7 @@ export function Experience() {
             </div>
 
             {/* Detail content */}
-            <div className="container mx-auto px-6 pb-24">
+            <div className="container mx-auto px-4 sm:px-6 pb-16 sm:pb-24">
               <div className="max-w-3xl mx-auto">
 
                 {/* Company name */}
@@ -102,7 +116,7 @@ export function Experience() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.15 }}
-                  className="font-outfit font-black text-3xl md:text-4xl text-white mt-8 mb-4"
+                  className="font-outfit font-black text-2xl sm:text-3xl md:text-4xl text-white mt-8 mb-4"
                 >
                   {selected.company}
                 </motion.h2>

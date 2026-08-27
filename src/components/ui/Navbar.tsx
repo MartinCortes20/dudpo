@@ -39,10 +39,10 @@ export function Navbar() {
         isScrolled ? "bg-black/80 backdrop-blur-md border-b border-white/10" : "bg-transparent"
       }`}
     >
-      <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+      <div className="container mx-auto px-4 sm:px-6 h-16 md:h-20 flex items-center justify-between">
         <button
           onClick={() => scrollTo("#hero")}
-          className="text-xl font-bold font-outfit tracking-wider text-chrome-violet"
+          className="text-base sm:text-xl font-bold font-outfit tracking-wider text-chrome-violet"
         >
           {siteConfig.name.toUpperCase()}
         </button>
@@ -83,7 +83,7 @@ export function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute top-20 left-0 w-full bg-black/95 backdrop-blur-xl border-b border-white/10 p-6 flex flex-col gap-6 md:hidden"
+            className="absolute top-16 md:top-20 left-0 w-full max-h-[calc(100dvh-4rem)] overflow-y-auto bg-black/95 backdrop-blur-xl border-b border-white/10 p-6 flex flex-col gap-5 md:hidden"
           >
             {navLinks.map((link) => (
               <button

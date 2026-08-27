@@ -136,13 +136,8 @@ export function ScrollExpandMedia({
           >
             {/* Natural-size background — no zoom, no crop */}
             <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage: "url('/assets/fondo.png')",
-                backgroundSize: "contain",
-                backgroundPosition: "center top",
-                backgroundRepeat: "no-repeat",
-              }}
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat md:bg-contain md:bg-top"
+              style={{ backgroundImage: "url('/assets/fondo.png')" }}
             />
           </motion.div>
 
@@ -155,8 +150,8 @@ export function ScrollExpandMedia({
                 style={{
                   width: `${mediaWidth}px`,
                   height: `${mediaHeight}px`,
-                  maxWidth: "95vw",
-                  maxHeight: "85vh",
+                  maxWidth: isMobile ? "90vw" : "95vw",
+                  maxHeight: isMobile ? "58dvh" : "85vh",
                 }}
               >
                 {mediaType === "video" ? (
@@ -188,7 +183,7 @@ export function ScrollExpandMedia({
               {scrollToExpand && (
                 <div className="flex flex-col items-center text-center relative z-10 mt-4 pointer-events-none">
                   <motion.p
-                    className="text-chrome-300 font-medium tracking-widest uppercase text-sm"
+                    className="text-chrome-300 font-medium tracking-widest uppercase text-[11px] sm:text-sm px-4 text-center"
                     animate={{ opacity: 1 - scrollProgress * 3 }}
                   >
                     {scrollToExpand}
@@ -205,14 +200,14 @@ export function ScrollExpandMedia({
               {title && (
                 <div className="flex flex-col items-center justify-center text-center gap-2 w-full relative z-10 pointer-events-none mix-blend-difference">
                   <motion.h1
-                    className="font-outfit font-black text-5xl md:text-7xl lg:text-8xl text-white tracking-tighter"
+                    className="font-outfit font-black text-4xl sm:text-5xl md:text-7xl lg:text-8xl text-white tracking-tighter"
                     style={{ transform: `translateX(-${textShift}vw)` }}
                   >
                     {firstWord}
                   </motion.h1>
                   {restWords && (
                     <motion.h1
-                      className="font-outfit font-black text-5xl md:text-7xl lg:text-8xl text-white tracking-tighter"
+                      className="font-outfit font-black text-4xl sm:text-5xl md:text-7xl lg:text-8xl text-white tracking-tighter"
                       style={{ transform: `translateX(${textShift}vw)` }}
                     >
                       {restWords}
