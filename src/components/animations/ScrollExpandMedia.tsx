@@ -76,7 +76,8 @@ export function ScrollExpandMedia({
         te.preventDefault();
       } else if (!mediaFullyExpanded) {
         te.preventDefault();
-        const factor = deltaY < 0 ? 0.008 : 0.005;
+        // ponytail: ~75px de swipe para expandir (antes 200px, se sentia eterno)
+        const factor = deltaY < 0 ? 0.018 : 0.013;
         const next = Math.min(Math.max(scrollProgress + deltaY * factor, 0), 1);
         setScrollProgress(next);
         if (next >= 1) { setMediaFullyExpanded(true); setShowContent(true); }

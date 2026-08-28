@@ -72,7 +72,7 @@ export function Portfolio() {
         // slice of the width (and less lateral spread) to read the same way
         path={
           isMobile
-            ? { railBirth: -8, railExit: 40, fan: 2.4, turnExit: 26, birthHeight: 4, exitHeight: 95 }
+            ? { railBirth: -8, railExit: 40, fan: 2.4, turnExit: 26, birthHeight: 8, exitHeight: 115 }
             : { railBirth: -14, railExit: 62, fan: 2.4, turnExit: 34 }
         }
         className="w-full h-[70svh] md:h-[80vh]"
