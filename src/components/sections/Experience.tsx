@@ -18,6 +18,7 @@ const COVERS: Record<string, string> = {
   "hotel-lomas-inn": "/assets/socialMedia/PORTADA%20LOM.jpg",
   "hr-graduaciones": "/assets/socialMedia/PORTADA%20HR.png",
   "laboratorio-clinico": "/assets/socialMedia/PORTADA%20LCJ.jpg",
+  "power-union": "/assets/socialMedia/PORTADA%20POWER.jpg",
 };
 
 // Map experience data to GalleryItem shape

@@ -25,6 +25,14 @@ const rays = [
   { rotate:  40, delay: 1.2,  width: 160, opacity: 0.15 },
 ];
 
+/* Recorte de la foto: se desvanece en los bordes para que el corte nunca se vea */
+const FADE_DESKTOP =
+  "linear-gradient(to bottom, transparent 0%, #000 6%, #000 55%, rgba(0,0,0,0.5) 75%, rgba(0,0,0,0.15) 88%, transparent 96%), " +
+  "linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%)";
+const FADE_MOBILE =
+  "linear-gradient(to bottom, transparent 0%, #000 4%, #000 58%, rgba(0,0,0,0.5) 78%, rgba(0,0,0,0.15) 90%, transparent 100%), " +
+  "linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%)";
+
 /* Floating sparkle particles */
 const sparks = [
   { top: "15%", left: "62%", size: 5,  delay: 0   },
@@ -109,15 +117,22 @@ export function About() {
           />
         ))}
 
-        {/* Her photo — full height, object-contain bottom-aligned */}
-        <div className="absolute inset-0 flex items-end justify-center">
+        {/* Her photo — se desvanece en todos los bordes: nunca se ve el corte */}
+        <div className="absolute inset-0 overflow-hidden">
           <Image
-            src="/assets/dudu.PNG"
+            src="/assets/dudu.svg"
             alt="Dulce Meza"
-            width={700}
-            height={900}
-            className="h-full w-auto max-w-none object-contain object-bottom"
+            width={384}
+            height={576}
+            unoptimized
             priority
+            className="absolute left-1/2 -translate-x-1/2 -bottom-[10%] h-[110%] w-auto max-w-none object-contain object-bottom"
+            style={{
+              maskImage: FADE_DESKTOP,
+              WebkitMaskImage: FADE_DESKTOP,
+              maskComposite: "intersect",
+              WebkitMaskComposite: "destination-in",
+            }}
           />
         </div>
       </div>
@@ -221,13 +236,21 @@ export function About() {
 
       {/* Mobile: show a smaller centered photo on top */}
       <div className="lg:hidden relative w-full flex justify-center pt-28 pb-4 pointer-events-none">
-        <div className="relative w-72 h-80">
+        <div className="relative w-[17rem] sm:w-[20rem] aspect-[2/3]">
           <div className="absolute inset-0 bg-electric-violet/30 blur-3xl rounded-full" />
           <Image
-            src="/assets/dudu.PNG"
+            src="/assets/dudu.svg"
             alt="Dulce Meza"
             fill
+            unoptimized
+            sizes="(min-width: 640px) 20rem, 17rem"
             className="object-contain object-bottom"
+            style={{
+              maskImage: FADE_MOBILE,
+              WebkitMaskImage: FADE_MOBILE,
+              maskComposite: "intersect",
+              WebkitMaskComposite: "destination-in",
+            }}
           />
         </div>
       </div>
