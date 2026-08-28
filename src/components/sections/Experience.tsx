@@ -1,6 +1,7 @@
 "use client";
 
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { experience } from "@/content/experience";
@@ -38,6 +39,8 @@ const galleryItems: GalleryItem[] = experience.map((exp) => {
 
 export function Experience() {
   const [selected, setSelected] = useState<GalleryItem | null>(null);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   // Con el detalle abierto la pagina no se desplaza: el usuario solo sale por
   // los botones de regresar, y vuelve a la galeria en vez de a otra seccion.
@@ -96,8 +99,12 @@ export function Experience() {
         )}
       </AnimatePresence>
 
-      {/* ── Expanded detail view ── */}
-      <AnimatePresence>
+      {/* ── Expanded detail view ──
+          En portal al body: dentro de la seccion quedaba atrapado en su
+          contexto de apilamiento (z-10) y Portfolio, hermano posterior con el
+          mismo z-10, lo pintaba encima. */}
+      {mounted && createPortal(
+        <AnimatePresence>
         {selected && (
           <motion.div
             key="detail"
@@ -105,7 +112,7 @@ export function Experience() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-0 z-50 bg-black overflow-y-auto overscroll-contain"
+            className="fixed inset-0 z-[100] bg-black overflow-y-auto overscroll-contain"
           >
             {/* Barra fija: unica salida del detalle */}
             <div className="sticky top-0 z-30 flex items-center gap-3 px-4 py-3 bg-black/85 backdrop-blur border-b border-white/10">
@@ -201,7 +208,9 @@ export function Experience() {
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
+        </AnimatePresence>,
+        document.body
+      )}
 
     </section>
   );
