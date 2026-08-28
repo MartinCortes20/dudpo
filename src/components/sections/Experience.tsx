@@ -63,7 +63,7 @@ export function Experience() {
             </div>
 
             {/* Carousel */}
-            <div className="w-full h-[440px] sm:h-[540px] md:h-[600px]">
+            <div className="w-full h-[480px] sm:h-[560px] md:h-[620px]">
               <CircularGallery items={galleryItems} onSelect={setSelected} />
             </div>
           </motion.div>

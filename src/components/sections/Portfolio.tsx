@@ -57,7 +57,7 @@ export function Portfolio() {
   );
 
   return (
-    <section id="portfolio" className="relative z-10">
+    <section id="portfolio" className="relative z-10 bg-black">
       {/* Mobile: titulo arriba, fotos debajo */}
       <div className="md:hidden relative flex flex-col items-center justify-center pt-20 pb-10 px-4">
         {title}

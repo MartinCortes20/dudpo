@@ -27,8 +27,9 @@ export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState(0);
-  // ponytail: uniform scale keeps the 3D ring intact on narrow screens
-  const [scale, setScale] = useState(1);
+  // ponytail: la card se mide del viewport y el radio sale de la geometria del
+  // anillo. Escalar todo el anillo (lo anterior) encogia tambien el texto.
+  const [dims, setDims] = useState({ w: 260, r: 420 });
   const rotationRef = useRef(0);
   const isDragging = useRef(false);
   const lastX = useRef(0);
@@ -38,16 +39,20 @@ export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
 
   const ITEM_COUNT = items.length;
   const ANGLE_STEP = 360 / ITEM_COUNT;
-  // Radius scales with number of items
-  const RADIUS = Math.max(340, ITEM_COUNT * 58);
+  const CARD_RATIO = 1.3;
 
   /* ── Fit the ring to the viewport ───────────────────────────────── */
   useEffect(() => {
-    const fit = () => setScale(Math.min(1, window.innerWidth / 560));
+    const fit = () => {
+      const w = Math.max(200, Math.min(300, window.innerWidth * 0.58));
+      // radio minimo para que las cards no se traslapen, con 35% de aire
+      const r = Math.max(260, (w / 2 / Math.tan(Math.PI / ITEM_COUNT)) * 1.35);
+      setDims({ w, r });
+    };
     fit();
     window.addEventListener("resize", fit);
     return () => window.removeEventListener("resize", fit);
-  }, []);
+  }, [ITEM_COUNT]);
 
   /* ── Painting ──────────────────────────────────────────────────── */
   // ponytail: el drag escribe el transform directo al DOM. Pasar por estado de
@@ -161,13 +166,13 @@ export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
       ref={containerRef}
       className="relative w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing select-none touch-pan-y"
     >
-      <div style={{ perspective: "1200px", transform: `scale(${scale})` }}>
+      <div style={{ perspective: "1200px" }}>
       <div
         ref={ringRef}
         className="relative"
         style={{
-          width: "260px",
-          height: "360px",
+          width: `${dims.w}px`,
+          height: `${dims.w * CARD_RATIO}px`,
           transformStyle: "preserve-3d",
           transform: `rotateY(${rotation}deg)`,
           willChange: "transform",
@@ -184,7 +189,7 @@ export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
               key={item.id}
               className="absolute inset-0 rounded-2xl overflow-hidden"
               style={{
-                transform: `rotateY(${angle}deg) translateZ(${RADIUS}px)`,
+                transform: `rotateY(${angle}deg) translateZ(${dims.r}px)`,
                 backfaceVisibility: "hidden",
               }}
             >
@@ -194,7 +199,7 @@ export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
                   src={item.photo}
                   alt={item.company}
                   fill
-                  sizes="260px"
+                  sizes="300px"
                   className="object-cover"
                 />
                 {/* Gradient overlay */}
@@ -204,7 +209,7 @@ export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
               </div>
 
               {/* Card content */}
-              <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
+              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 z-10">
                 <p className="text-electric-violet text-xs font-semibold tracking-widest uppercase mb-1">
                   {item.role}
                 </p>

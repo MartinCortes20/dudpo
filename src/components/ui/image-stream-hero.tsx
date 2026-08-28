@@ -133,7 +133,7 @@ export function ImageStreamHero({
                     <img
                       src={img.src}
                       alt={img.alt ?? ""}
-                      loading="lazy"
+                      loading="eager"
                       decoding="async"
                       className="h-full w-full object-cover"
                       draggable={false}
