@@ -39,8 +39,30 @@ export function Portfolio() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
+  const title = (
+    <>
+      {/* Radial glow behind text */}
+      <div className="absolute w-[280px] sm:w-[400px] md:w-[500px] h-[160px] md:h-[200px] bg-electric-violet/20 blur-3xl rounded-full" />
+
+      <p className="text-electric-violet font-semibold tracking-[0.3em] uppercase text-xs sm:text-xs mb-3 sm:mb-4 relative">
+        Creaciones
+      </p>
+      <h2 className="font-outfit font-black text-6xl sm:text-5xl md:text-7xl text-center leading-none relative px-4">
+        MI <GradientText variant="chrome">TRABAJO</GradientText>
+      </h2>
+      <p className="mt-4 px-4 text-center text-chrome-400 text-sm sm:text-sm tracking-widest relative">
+        Diseño · Fotografía · Video · Contenido
+      </p>
+    </>
+  );
+
   return (
     <section id="portfolio" className="relative z-10">
+      {/* Mobile: titulo arriba, fotos debajo */}
+      <div className="md:hidden relative flex flex-col items-center justify-center pt-20 pb-10 px-4">
+        {title}
+      </div>
+
       <ImageStreamHero
         images={workImages}
         cards={isMobile ? 6 : Math.ceil(workImages.length / 2)}
@@ -53,7 +75,7 @@ export function Portfolio() {
             ? { railBirth: -8, railExit: 40, fan: 2.4, turnExit: 26, birthHeight: 4, exitHeight: 95 }
             : { railBirth: -14, railExit: 62, fan: 2.4, turnExit: 34 }
         }
-        className="w-full h-[85svh] md:h-screen"
+        className="w-full h-[70svh] md:h-screen"
       >
         {/* Overlay: gradient top + bottom so the section edges blend with black */}
         <div className="absolute inset-0 pointer-events-none">
@@ -61,20 +83,9 @@ export function Portfolio() {
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
         </div>
 
-        {/* Centered title */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
-          {/* Radial glow behind text */}
-          <div className="absolute w-[280px] sm:w-[400px] md:w-[500px] h-[160px] md:h-[200px] bg-electric-violet/20 blur-3xl rounded-full" />
-
-          <p className="text-electric-violet font-semibold tracking-[0.3em] uppercase text-[10px] sm:text-xs mb-3 sm:mb-4 relative">
-            Creaciones
-          </p>
-          <h2 className="font-outfit font-black text-4xl sm:text-5xl md:text-7xl text-center leading-none relative px-4">
-            MI <GradientText variant="chrome">TRABAJO</GradientText>
-          </h2>
-          <p className="mt-4 px-4 text-center text-chrome-400 text-xs sm:text-sm tracking-widest relative">
-            Diseño · Fotografía · Video · Contenido
-          </p>
+        {/* Desktop: titulo centrado sobre las fotos */}
+        <div className="hidden md:flex absolute inset-0 flex-col items-center justify-center z-10 pointer-events-none">
+          {title}
         </div>
       </ImageStreamHero>
     </section>

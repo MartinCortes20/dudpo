@@ -25,6 +25,7 @@ interface CircularGalleryProps {
 
 export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState(0);
   // ponytail: uniform scale keeps the 3D ring intact on narrow screens
   const [scale, setScale] = useState(1);
@@ -48,17 +49,32 @@ export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
     return () => window.removeEventListener("resize", fit);
   }, []);
 
+  /* ── Painting ──────────────────────────────────────────────────── */
+  // ponytail: el drag escribe el transform directo al DOM. Pasar por estado de
+  // React en cada touchmove re-renderiza 8 cards con <Image> y se traba.
+  const draw = useCallback(() => {
+    if (ringRef.current) {
+      ringRef.current.style.transform = `rotateY(${rotationRef.current}deg)`;
+    }
+  }, []);
+
+  const schedule = useCallback(() => {
+    cancelAnimationFrame(rafId.current);
+    rafId.current = requestAnimationFrame(draw);
+  }, [draw]);
+
   /* ── Inertia scroll ────────────────────────────────────────────── */
   const applyInertia = useCallback(() => {
     if (Math.abs(velocity.current) < 0.05) {
       velocity.current = 0;
+      setRotation(rotationRef.current); // sincroniza el estado "front" de los botones
       return;
     }
     velocity.current *= 0.94;
     rotationRef.current += velocity.current;
-    setRotation(rotationRef.current);
+    draw();
     rafId.current = requestAnimationFrame(applyInertia);
-  }, []);
+  }, [draw]);
 
   /* ── Mouse events ──────────────────────────────────────────────── */
   useEffect(() => {
@@ -78,7 +94,7 @@ export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
       const dx = e.clientX - lastX.current;
       velocity.current = dx * 0.25;
       rotationRef.current += dx * 0.25;
-      setRotation(rotationRef.current);
+      schedule();
       lastX.current = e.clientX;
     };
 
@@ -93,7 +109,7 @@ export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
       velocity.current = 0;
       cancelAnimationFrame(rafId.current);
       rotationRef.current -= e.deltaY * 0.15;
-      setRotation(rotationRef.current);
+      schedule();
     };
 
     const onTouchStart = (e: TouchEvent) => {
@@ -107,9 +123,11 @@ export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
       if (!touchActive.current) return;
       e.preventDefault();
       const dx = e.touches[0].clientX - lastX.current;
-      velocity.current = dx * 0.25;
-      rotationRef.current += dx * 0.25;
-      setRotation(rotationRef.current);
+      // ponytail: cap para que un swipe rapido no dispare un giro absurdo
+      const delta = Math.max(-40, Math.min(40, dx * 0.25));
+      velocity.current = delta;
+      rotationRef.current += delta;
+      draw();
       lastX.current = e.touches[0].clientX;
     };
 
@@ -136,7 +154,7 @@ export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
       el.removeEventListener("touchend", onTouchEnd);
       cancelAnimationFrame(rafId.current);
     };
-  }, [applyInertia]);
+  }, [applyInertia, draw, schedule]);
 
   return (
     <div
@@ -145,13 +163,14 @@ export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
     >
       <div style={{ perspective: "1200px", transform: `scale(${scale})` }}>
       <div
+        ref={ringRef}
         className="relative"
         style={{
           width: "260px",
           height: "360px",
           transformStyle: "preserve-3d",
           transform: `rotateY(${rotation}deg)`,
-          transition: isDragging.current ? "none" : "transform 0.05s linear",
+          willChange: "transform",
         }}
       >
         {items.map((item, i) => {
@@ -175,6 +194,7 @@ export function CircularGallery({ items, onSelect }: CircularGalleryProps) {
                   src={item.photo}
                   alt={item.company}
                   fill
+                  sizes="260px"
                   className="object-cover"
                 />
                 {/* Gradient overlay */}
