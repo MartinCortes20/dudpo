@@ -58,8 +58,8 @@ export function Portfolio() {
 
   return (
     <section id="portfolio" className="relative z-10 bg-black">
-      {/* Mobile: titulo arriba, fotos debajo */}
-      <div className="md:hidden relative flex flex-col items-center justify-center pt-20 pb-10 px-4">
+      {/* Titulo arriba, fotos debajo: encimado no se leia */}
+      <div className="relative flex flex-col items-center justify-center pt-20 md:pt-28 pb-10 md:pb-14 px-4">
         {title}
       </div>
 
@@ -75,17 +75,12 @@ export function Portfolio() {
             ? { railBirth: -8, railExit: 40, fan: 2.4, turnExit: 26, birthHeight: 4, exitHeight: 95 }
             : { railBirth: -14, railExit: 62, fan: 2.4, turnExit: 34 }
         }
-        className="w-full h-[70svh] md:h-screen"
+        className="w-full h-[70svh] md:h-[80vh]"
       >
         {/* Overlay: gradient top + bottom so the section edges blend with black */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
-        </div>
-
-        {/* Desktop: titulo centrado sobre las fotos */}
-        <div className="hidden md:flex absolute inset-0 flex-col items-center justify-center z-10 pointer-events-none">
-          {title}
         </div>
       </ImageStreamHero>
     </section>

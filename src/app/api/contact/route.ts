@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const TO = "xdudumf@gmail.com";
+const TO = "mefradulce@gmail.com";
 // Sin dominio verificado en Resend usa onboarding@resend.dev (sólo llega al
 // dueño de la cuenta). Con dominio propio: CONTACT_FROM="Web <hola@dominio.com>"
 const FROM = process.env.CONTACT_FROM ?? "Portafolio <onboarding@resend.dev>";

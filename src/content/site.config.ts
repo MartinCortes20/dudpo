@@ -15,6 +15,6 @@ export const siteConfig = {
   ],
   contact: {
     phone: "5548409077",
-    email: "xdudumf@gmail.com"
+    email: "mefradulce@gmail.com"
   }
 };
