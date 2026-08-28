@@ -107,6 +107,11 @@ body {
   overflow-x: hidden;
 }
 
+/* Detalle de Social Media abierto: sin navbar, sin salidas laterales */
+body.detail-open header {
+  display: none;
+}
+
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   * {

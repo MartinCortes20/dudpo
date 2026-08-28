@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { experience } from "@/content/experience";
@@ -38,9 +38,32 @@ const galleryItems: GalleryItem[] = experience.map((exp) => {
 
 export function Experience() {
   const [selected, setSelected] = useState<GalleryItem | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Con el detalle abierto la pagina no se desplaza: el usuario solo sale por
+  // los botones de regresar, y vuelve a la galeria en vez de a otra seccion.
+  useLayoutEffect(() => {
+    if (!selected) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    // el navbar es fixed z-50 fuera de este contexto de apilamiento: se oculta
+    // por clase para que no tape la barra ni ofrezca escapes
+    document.body.classList.add("detail-open");
+    return () => {
+      document.body.style.overflow = prev;
+      document.body.classList.remove("detail-open");
+    };
+  }, [selected]);
+
+  const close = () => {
+    setSelected(null);
+    requestAnimationFrame(() =>
+      sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+    );
+  };
 
   return (
-    <section id="experience" className="relative z-10 bg-black/50 border-y border-white/5">
+    <section ref={sectionRef} id="experience" className="relative z-10 bg-black/50 border-y border-white/5">
 
       {/* ── Gallery view ── */}
       <AnimatePresence mode="wait">
@@ -79,8 +102,21 @@ export function Experience() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="min-h-[560px] sm:min-h-[700px] relative"
+            className="fixed inset-0 z-50 bg-black overflow-y-auto overscroll-contain"
           >
+            {/* Barra fija: unica salida del detalle */}
+            <div className="sticky top-0 z-30 flex items-center gap-3 px-4 py-3 bg-black/85 backdrop-blur border-b border-white/10">
+              <button
+                onClick={close}
+                className="shrink-0 flex items-center gap-2 px-4 py-2 text-xs sm:text-sm rounded-full border border-electric-violet/50 bg-black/70 text-white font-semibold hover:bg-electric-violet/30 hover:border-electric-violet transition-all duration-200"
+              >
+                ← Regresar
+              </button>
+              <p className="text-chrome-400 text-[11px] sm:text-xs leading-tight">
+                Regresa para seguir viendo las demás experiencias de Social Media
+              </p>
+            </div>
+
             {/* Hero image */}
             <div className="relative w-full h-56 sm:h-72 md:h-96 overflow-hidden">
               <Image
@@ -91,14 +127,6 @@ export function Experience() {
               />
               {/* Gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black" />
-
-              {/* Back button */}
-              <button
-                onClick={() => setSelected(null)}
-                className="absolute top-4 left-4 sm:top-6 sm:left-6 z-20 flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm rounded-full border border-electric-violet/50 bg-black/70 backdrop-blur text-white font-semibold hover:bg-electric-violet/30 hover:border-electric-violet transition-all duration-200"
-              >
-                ← Regresar
-              </button>
 
               {/* Floating badge */}
               <div className="absolute bottom-5 left-4 sm:bottom-8 sm:left-8 z-20">
@@ -159,7 +187,7 @@ export function Experience() {
                   className="mt-12"
                 >
                   <button
-                    onClick={() => setSelected(null)}
+                    onClick={close}
                     className="flex items-center gap-2 px-6 py-3 rounded-full border border-electric-violet/50 bg-black/60 text-white text-sm font-semibold hover:bg-electric-violet/20 hover:border-electric-violet transition-all duration-200"
                   >
                     ← Ver todas las experiencias
