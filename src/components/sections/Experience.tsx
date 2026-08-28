@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { experience } from "@/content/experience";
@@ -38,32 +38,35 @@ const galleryItems: GalleryItem[] = experience.map((exp) => {
 
 export function Experience() {
   const [selected, setSelected] = useState<GalleryItem | null>(null);
-  const sectionRef = useRef<HTMLElement>(null);
 
   // Con el detalle abierto la pagina no se desplaza: el usuario solo sale por
   // los botones de regresar, y vuelve a la galeria en vez de a otra seccion.
   useLayoutEffect(() => {
     if (!selected) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    // body fixed + top negativo: congela la pagina SIN que el reflow (la
+    // galeria se desmonta) mueva el scroll. Al cerrar se restaura exacto.
+    const y = window.scrollY;
+    const body = document.body;
+    const prev = { position: body.style.position, top: body.style.top, width: body.style.width };
+    body.style.position = "fixed";
+    body.style.top = `-${y}px`;
+    body.style.width = "100%";
     // el navbar es fixed z-50 fuera de este contexto de apilamiento: se oculta
     // por clase para que no tape la barra ni ofrezca escapes
-    document.body.classList.add("detail-open");
+    body.classList.add("detail-open");
     return () => {
-      document.body.style.overflow = prev;
-      document.body.classList.remove("detail-open");
+      body.style.position = prev.position;
+      body.style.top = prev.top;
+      body.style.width = prev.width;
+      body.classList.remove("detail-open");
+      window.scrollTo(0, y);
     };
   }, [selected]);
 
-  const close = () => {
-    setSelected(null);
-    requestAnimationFrame(() =>
-      sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
-    );
-  };
+  const close = () => setSelected(null);
 
   return (
-    <section ref={sectionRef} id="experience" className="relative z-10 bg-black/50 border-y border-white/5">
+    <section id="experience" className="relative z-10 bg-black/50 border-y border-white/5">
 
       {/* ── Gallery view ── */}
       <AnimatePresence mode="wait">

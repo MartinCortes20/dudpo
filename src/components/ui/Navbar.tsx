@@ -6,11 +6,11 @@ import { Menu, X } from "lucide-react";
 import { siteConfig } from "@/content/site.config";
 import { ChromeButton } from "./ChromeButton";
 
+// Solo las secciones que realmente se renderizan en page.tsx
 const navLinks = [
   { href: "#about", label: "Sobre mí" },
-  { href: "#experience", label: "Experiencia" },
-  { href: "#services", label: "Servicios" },
-  { href: "#portfolio", label: "Portafolio" },
+  { href: "#experience", label: "Social Media" },
+  { href: "#portfolio", label: "Mi Trabajo" },
 ];
 
 export function Navbar() {
@@ -41,7 +41,7 @@ export function Navbar() {
     >
       <div className="container mx-auto px-4 sm:px-6 h-16 md:h-20 flex items-center justify-between">
         <button
-          onClick={() => scrollTo("#hero")}
+          onClick={() => { setIsOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }}
           className="text-base sm:text-xl font-bold font-outfit tracking-wider text-chrome-violet"
         >
           {siteConfig.name.toUpperCase()}
